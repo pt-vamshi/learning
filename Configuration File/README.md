@@ -328,3 +328,15 @@ For issues or questions:
 2. Review Ansible logs with `-v` flag
 3. Verify all prerequisites are met
 4. Ensure target server meets minimum requirements 
+
+## 📸 Proofs
+
+Below are screenshots demonstrating successful Ansible automation and deployment:
+
+### 1. Playbook Execution
+
+![Playbook Execution](Screenshot%202025-07-02%20at%207.40.33%E2%80%AFPM%20(2).png)
+
+### 2. Service Verification
+
+![Service Verification](Screenshot%202025-07-02%20at%207.41.24%E2%80%AFPM%20(2).png) 

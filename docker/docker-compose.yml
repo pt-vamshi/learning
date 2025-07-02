@@ -1,0 +1,21 @@
+services:
+  python-hello-world:
+    build: .
+    ports:
+      - "80:80"
+      - "8000:8000"
+    volumes:
+      - ./app.py:/app/app.py
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./start.sh:/app/start.sh
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PORT=8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s 
