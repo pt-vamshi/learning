@@ -47,37 +47,6 @@
     login_unix_socket: /var/run/mysqld/mysqld.sock
     state: present
   when: mysql_root_password is not defined or mysql_root_password == ''
-
-# PHASE 2: All subsequent tasks use password authentication
-- name: Create MySQL database (with root password)
-  mysql_db:
-    name: "{{ mysql_database | default('webapp') }}"
-    state: present
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
-  when: mysql_root_password is defined and mysql_root_password != ''
-
-- name: Create MySQL user for application (with root password)
-  mysql_user:
-    name: "{{ mysql_user | default('webapp_user') }}"
-    password: "{{ mysql_user_password }}"
-    priv: "{{ mysql_database | default('webapp') }}.*:ALL"
-    host: localhost
-    state: present
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
-  when: mysql_root_password is defined and mysql_root_password != ''
-
-- name: Set MySQL root password (ensure idempotency)
-  mysql_user:
-    name: root
-    host: localhost
-    password: "{{ mysql_root_password }}"
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
-    state: present
-  when: mysql_root_password is defined and mysql_root_password != ''
-
 - name: Configure MySQL settings
   template:
     src: mysql.cnf.j2
