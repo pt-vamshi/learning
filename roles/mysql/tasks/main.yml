@@ -1,0 +1,54 @@
+---
+- name: Install MySQL packages
+  apt:
+    name:
+      - mysql-server
+      - mysql-client
+      - python3-mysqldb
+    state: present
+
+- name: Start and enable MySQL service
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: Wait for MySQL to be ready
+  wait_for:
+    port: 3306
+    delay: 10
+    timeout: 60
+
+- name: Secure MySQL installation
+  mysql_user:
+    name: root
+    host: localhost
+    password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+
+- name: Create MySQL database
+  mysql_db:
+    name: "{{ mysql_database | default('webapp') }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Create MySQL user for application
+  mysql_user:
+    name: "{{ mysql_user | default('webapp_user') }}"
+    password: "{{ mysql_user_password }}"
+    priv: "{{ mysql_database | default('webapp') }}.*:ALL"
+    host: localhost
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Configure MySQL settings
+  template:
+    src: mysql.cnf.j2
+    dest: /etc/mysql/conf.d/custom.cnf
+    backup: yes
+  notify: restart mysql 

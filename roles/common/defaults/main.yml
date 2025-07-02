@@ -1,0 +1,10 @@
+---
+# Ephemeral storage configuration
+ephemeral_volume_path: "/tmp/ephemeral-data"
+
+# Common user configuration (will be detected automatically)
+common_user: "{{ ansible_user | default('ubuntu') }}"
+common_group: "{{ ansible_user | default('ubuntu') }}"
+
+# Local vs remote detection
+is_localhost: "{{ ansible_connection == 'local' }}" 
