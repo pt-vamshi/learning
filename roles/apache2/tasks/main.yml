@@ -32,9 +32,8 @@
   notify: restart apache2
 
 - name: Enable custom Apache2 configuration
-  apache2_module:
-    name: custom
-    state: present
+  command: a2enconf custom
+  notify: restart apache2
 
 - name: Start and enable Apache2
   service:
@@ -50,11 +49,4 @@
     owner: "{{ apache2_user | default('www-data') }}"
     group: "{{ apache2_group | default('www-data') }}"
 
-- name: Create default index.html
-  template:
-    src: index.html.j2
-    dest: "{{ apache2_web_root | default('/var/www/html') }}/index.html"
-    owner: "{{ apache2_user | default('www-data') }}"
-    group: "{{ apache2_group | default('www-data') }}"
-    mode: '0644'
-  notify: restart apache2 
+# Note: index.html creation removed as it's not needed for uptime-kuma reverse proxy 
