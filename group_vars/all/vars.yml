@@ -6,6 +6,8 @@ mysql_database: "webapp"
 mysql_user: "webapp_user"
 mysql_bind_address: "127.0.0.1"
 mysql_skip_networking: false
+mysql_root_password: "{{ vault_mysql_root_password }}"
+mysql_user_password: "{{ vault_mysql_user_password }}"
 
 # Docker configuration
 docker_image: "louislam/uptime-kuma:latest"
