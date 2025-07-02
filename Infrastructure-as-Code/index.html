@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Media Streaming App</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    h1 { color: #2c3e50; }
+    .video-list { margin-top: 2em; }
+    video { width: 480px; margin-bottom: 1em; display: block; }
+  </style>
+</head>
+<body>
+  <h1>Media Streaming App</h1>
+  <p>Welcome! Below are videos available in the <code>videos/</code> folder.</p>
+  <div class="video-list" id="video-list">
+    Loading videos...
+  </div>
+  <script>
+
+
+    // Replace with your CloudFront domain
+    const CLOUDFRONT_URL = window.location.origin;
+
+    // Replace with your deployed API Gateway endpoint
+    const API_URL = "https://lrlczsdwgf.execute-api.us-east-1.amazonaws.com/prod/videos";
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => {
+        const videos = data.videos || [];
+        const listDiv = document.getElementById('video-list');
+        listDiv.innerHTML = '';
+        if (videos.length === 0) {
+          listDiv.textContent = 'No videos found.';
+        } else {
+          videos.forEach(url => {
+            const video = document.createElement('video');
+            video.src = url; // Use the full URL from Lambda directly
+            video.controls = true;
+            listDiv.appendChild(video);
+            const label = document.createElement('div');
+            label.textContent = url.split('/').pop();
+            listDiv.appendChild(label);
+          });
+        }
+      })
+      .catch(() => {
+        document.getElementById('video-list').textContent = 'Failed to load videos.';
+      });
+  </script>
+</body>
+</html> 

@@ -67,10 +67,14 @@ The following files are mounted as volumes for live reload:
 - `nginx.conf` → `/etc/nginx/nginx.conf`
 - `start.sh` → `/app/start.sh`
 
-## Screenshot
+## 📸 Proofs
 
-Below is a sample screenshot of the running app in the browser:
+Below are screenshots demonstrating the running Dockerized app:
 
-![App Screenshot](Screenshot%202025-07-02%20at%208.44.13%E2%80%AFPM%20(2).png)
+### 1. App Main Screen
 
-> To update the screenshot: Replace this file in the folder with your own. 
+![App Main Screen](Screenshot%202025-07-02%20at%208.44.13%E2%80%AFPM%20(2).png)
+
+### 2. Alternate View
+
+![Alternate View](Screenshot%202025-07-02%20at%208.43.57%E2%80%AFPM%20(2).png)
