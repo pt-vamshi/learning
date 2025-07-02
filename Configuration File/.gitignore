@@ -1,0 +1,57 @@
+# Ansible
+*.retry
+*.pyc
+__pycache__/
+.ansible/
+
+# SSH keys and sensitive files
+*.pem
+*.key
+id_rsa*
+*.pub
+
+# Vault password file
+.vault_pass
+
+# Backup files
+*.backup
+hosts.backup.*
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Node modules (if any)
+node_modules/
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/ 

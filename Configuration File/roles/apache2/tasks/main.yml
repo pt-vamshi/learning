@@ -1,0 +1,52 @@
+---
+- name: Install Apache2
+  apt:
+    name: apache2
+    state: present
+
+- name: Enable required Apache2 modules
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - rewrite
+    - headers
+    - expires
+    - deflate
+    - proxy
+    - proxy_http
+    - proxy_wstunnel
+
+- name: Configure Apache2 virtual host
+  template:
+    src: apache2-vhost.conf.j2
+    dest: /etc/apache2/sites-available/000-default.conf
+    backup: yes
+  notify: restart apache2
+
+- name: Create custom Apache2 configuration
+  template:
+    src: apache2-custom.conf.j2
+    dest: /etc/apache2/conf-available/custom.conf
+    backup: yes
+  notify: restart apache2
+
+- name: Enable custom Apache2 configuration
+  command: a2enconf custom
+  notify: restart apache2
+
+- name: Start and enable Apache2
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+
+- name: Create web root directory
+  file:
+    path: "{{ apache2_web_root | default('/var/www/html') }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ apache2_user | default('www-data') }}"
+    group: "{{ apache2_group | default('www-data') }}"
+
+# Note: index.html creation removed as it's not needed for uptime-kuma reverse proxy 
