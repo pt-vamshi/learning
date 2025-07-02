@@ -2,8 +2,9 @@
 # MySQL configuration
 mysql_database: "webapp"
 mysql_user: "webapp_user"
-mysql_user_password: "{{ lookup('password', '/dev/null length=16 chars=ascii_letters,digits') }}"
-mysql_root_password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
+# Passwords are now managed in vault.yml
+# mysql_root_password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
+# mysql_user_password: "{{ lookup('password', '/dev/null length=16 chars=ascii_letters,digits') }}"
 
 # MySQL basic settings
 mysql_bind_address: "127.0.0.1"

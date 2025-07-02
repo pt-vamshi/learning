@@ -19,39 +19,28 @@
     delay: 10
     timeout: 60
 
-- name: Check if MySQL root password is set
-  command: mysql -u root -e "SELECT 1" 2>/dev/null
-  register: mysql_root_check
-  failed_when: false
-  changed_when: false
+- name: Secure MySQL installation using mysql_secure_installation
+  command: mysql_secure_installation --use-default
+  args:
+    stdin: |
+      y
+      {{ mysql_root_password }}
+      {{ mysql_root_password }}
+      y
+      y
+      y
+      y
+  when: ansible_connection != 'local' or ansible_user != 'root'
 
-- name: Set MySQL root password if not set
-  mysql_user:
-    name: root
-    host: localhost
-    password: "{{ mysql_root_password }}"
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-    state: present
-  when: mysql_root_check.rc != 0
-
-- name: Create MySQL database (with password)
+- name: Create MySQL database
   mysql_db:
     name: "{{ mysql_database | default('webapp') }}"
     state: present
     login_user: root
     login_password: "{{ mysql_root_password }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
-  when: mysql_root_check.rc == 0
 
-- name: Create MySQL database (without password)
-  mysql_db:
-    name: "{{ mysql_database | default('webapp') }}"
-    state: present
-    login_user: root
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-  when: mysql_root_check.rc != 0
-
-- name: Create MySQL user for application (with password)
+- name: Create MySQL user for application
   mysql_user:
     name: "{{ mysql_user | default('webapp_user') }}"
     password: "{{ mysql_user_password }}"
@@ -61,18 +50,6 @@
     login_user: root
     login_password: "{{ mysql_root_password }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
-  when: mysql_root_check.rc == 0
-
-- name: Create MySQL user for application (without password)
-  mysql_user:
-    name: "{{ mysql_user | default('webapp_user') }}"
-    password: "{{ mysql_user_password }}"
-    priv: "{{ mysql_database | default('webapp') }}.*:ALL"
-    host: localhost
-    state: present
-    login_user: root
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-  when: mysql_root_check.rc != 0
 
 - name: Configure MySQL settings
   template:

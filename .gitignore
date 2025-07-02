@@ -10,6 +10,9 @@ __pycache__/
 id_rsa*
 *.pub
 
+# Vault password file
+.vault_pass
+
 # Backup files
 *.backup
 hosts.backup.*

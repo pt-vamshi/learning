@@ -11,7 +11,7 @@
     apache2_server_name: "{{ inventory_hostname | default('localhost') }}"
     apache2_server_admin: "webmaster@{{ inventory_hostname | default('localhost') }}"
     
-    # MySQL variables (passwords will be auto-generated)
+    # MySQL variables (passwords managed in vault.yml)
     mysql_database: "webapp"
     mysql_user: "webapp_user"
     
@@ -59,9 +59,9 @@
           - Uptime Kuma (Direct): http://{{ inventory_hostname | default('localhost') }}:{{ docker_host_port }}
           - MySQL: localhost:3306 (database: {{ mysql_database }})
           
-          🔐 Credentials (check playbook output for passwords):
-          - MySQL Root Password: Auto-generated
-          - MySQL User: {{ mysql_user }} (password auto-generated)
+          🔐 Credentials (check vault.yml for passwords):
+          - MySQL Root Password: Managed in vault
+          - MySQL User: {{ mysql_user }} (password managed in vault)
           
           📁 Ephemeral Storage Location: {{ ephemeral_volume_path }}
           ========================================
