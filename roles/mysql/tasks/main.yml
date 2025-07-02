@@ -19,18 +19,20 @@
     delay: 10
     timeout: 60
 
-- name: Secure MySQL installation using mysql_secure_installation
-  command: mysql_secure_installation --use-default
-  args:
-    stdin: |
-      y
-      {{ mysql_root_password }}
-      {{ mysql_root_password }}
-      y
-      y
-      y
-      y
-  when: ansible_connection != 'local' or ansible_user != 'root'
+- name: Check if MySQL root password is set
+  command: mysql -u root -e "SELECT 1" 2>/dev/null
+  register: mysql_root_check
+  failed_when: false
+  changed_when: false
+
+- name: Set MySQL root password (fresh installation)
+  mysql_user:
+    name: root
+    host: localhost
+    password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+  when: mysql_root_check.rc != 0
 
 - name: Create MySQL database
   mysql_db:
@@ -47,6 +49,23 @@
     priv: "{{ mysql_database | default('webapp') }}.*:ALL"
     host: localhost
     state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Remove anonymous users
+  mysql_user:
+    name: ""
+    host: localhost
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Remove test database
+  mysql_db:
+    name: test
+    state: absent
     login_user: root
     login_password: "{{ mysql_root_password }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
