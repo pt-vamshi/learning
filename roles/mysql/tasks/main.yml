@@ -25,13 +25,8 @@
   failed_when: false
   changed_when: false
 
-- name: Set MySQL root password (fresh installation)
-  mysql_user:
-    name: root
-    host: localhost
-    password: "{{ mysql_root_password }}"
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-    state: present
+- name: Set MySQL root password using SQL command
+  command: mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
   when: mysql_root_check.rc != 0
 
 - name: Create MySQL database
